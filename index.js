@@ -19,4 +19,9 @@ mongoose.connect('mongodb+srv://srinithisankar08_db_user:16hLg5nXuDJDsF1u@timesh
   useUnifiedTopology: true,
 });
 
-app.listen(5000, () => console.log("Server running on port 5000"));
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
