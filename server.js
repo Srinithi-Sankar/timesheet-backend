@@ -14,7 +14,7 @@ app.use(express.json());
 
 // ✅ Add this route to make the root public
 app.get("/", (req, res) => {
-  res.send("✅ Timesheet Backend API is live and public!");
+  res.send("✅ Timesheet Backend API is live and public! Build v2");
 });
 
 // Routes
