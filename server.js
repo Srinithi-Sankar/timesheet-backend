@@ -12,10 +12,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// ✅ Add this route to make the root public
-app.get("/", (req, res) => {
-  res.send("✅ Timesheet Backend API is live and public! Build v2");
-});
+
 
 // Routes
 app.use("/api/auth", authRoutes);
@@ -25,6 +22,10 @@ mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("MongoDB error:", err));
+
+app.get("/", (req, res) => {
+  res.send("✅ Timesheet backend is live on Render!");
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
