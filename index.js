@@ -13,6 +13,10 @@ app.use(express.json());
 import authRoutes from "./routes/auth.js";
 app.use("/api/auth", authRoutes);
 app.use("/api/timesheet", timesheetRoutes);
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
 
 mongoose.connect('mongodb+srv://srinithisankar08_db_user:16hLg5nXuDJDsF1u@timesheet-app.tgc0jt5.mongodb.net/timesheetDB?retryWrites=true&w=majority', {
   useNewUrlParser: true,
@@ -21,7 +25,4 @@ mongoose.connect('mongodb+srv://srinithisankar08_db_user:16hLg5nXuDJDsF1u@timesh
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
 
