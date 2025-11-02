@@ -6,6 +6,7 @@ import cors from "cors";
 import authRoutes from "./routes/authRoutes.js";
 import timesheetRoutes from "./routes/timesheetRoutes.js";
 
+
 dotenv.config();
 
 const app = express();
