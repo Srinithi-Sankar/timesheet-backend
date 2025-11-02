@@ -3,8 +3,9 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
 
-import authRoutes from "./routes/authRoutes.js";
-import timesheetRoutes from "./routes/timesheetRoutes.js";
+import authRoutes from "./routes/auth.js";
+import timesheetRoutes from "./routes/timesheet.js";
+
 
 
 dotenv.config();
