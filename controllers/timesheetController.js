@@ -1,51 +1,29 @@
 import Timesheet from "../models/Timesheet.js";
 
-// ✅ Add Timesheet Entry
-export const addTimesheetEntry = async (req, res) => {
+export const getEntries = async (req, res) => {
   try {
-    const { userId, date, project, task, hours, description } = req.body;
+    const entries = await Timesheet.find();
+    res.json(entries);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
 
-    if (!userId) {
-      return res.status(400).json({ message: "User ID is required" });
-    }
-
-    const newEntry = new Timesheet({
-      userId,
-      date,
-      project,
-      task,
-      hours,
-      description,
-    });
-
+export const addEntry = async (req, res) => {
+  try {
+    const newEntry = new Timesheet(req.body);
     await newEntry.save();
-    res.status(201).json({ message: "Entry added successfully", entry: newEntry });
-  } catch (error) {
-    console.error("Timesheet add error:", error);
-    res.status(500).json({ message: "Server error" });
+    res.status(201).json(newEntry);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
   }
 };
 
-// ✅ Get Timesheet Entries for a user
-export const getTimesheetEntries = async (req, res) => {
+export const deleteEntry = async (req, res) => {
   try {
-    const { userId } = req.params;
-    const entries = await Timesheet.find({ userId });
-    res.status(200).json(entries);
-  } catch (error) {
-    console.error("Get entries error:", error);
-    res.status(500).json({ message: "Server error" });
-  }
-};
-
-
-
-export const deleteTimesheetEntry = async (req, res) => {
-  try {
-    const { entryId } = req.params;
-    await Timesheet.findByIdAndDelete(entryId);
-    res.json({ message: "Entry deleted successfully" });
-  } catch (error) {
-    res.status(500).json({ message: "Failed to delete entry" });
+    await Timesheet.findByIdAndDelete(req.params.id);
+    res.json({ message: "Entry deleted" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };

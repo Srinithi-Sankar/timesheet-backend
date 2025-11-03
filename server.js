@@ -2,38 +2,36 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import mongoose from "mongoose";
-import authRoutes from "./routes/auth.js"; // ✅ correct path
+import authRoutes from "./routes/auth.js";
+import timesheetRoutes from "./routes/timesheet.js"; // ✅ make sure this file exists
 
 dotenv.config();
 const app = express();
 
-// ✅ Allow frontend access
 app.use(
   cors({
-    origin: [
-      "https://timesheet-frontend-qkmc.onrender.com",
-      "http://localhost:3000",
-    ],
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    origin: ["https://timesheet-frontend-qkmc.onrender.com", "http://localhost:3000"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })
 );
 
+// ✅ Explicitly handle OPTIONS preflight
+app.options("*", cors());
+
 app.use(express.json());
 
-// ✅ Add your routes here
+// ✅ Add routes
 app.use("/auth", authRoutes);
+app.use("/timesheet", timesheetRoutes); // ✅ mount your timesheet routes here
 
-// Default route (for Render health check)
 app.get("/", (req, res) => {
   res.send("✅ Timesheet backend is live on Render!");
 });
 
-// MongoDB + Server Start
 const PORT = process.env.PORT || 5000;
 mongoose
   .connect(process.env.MONGO_URI)
-  .then(() =>
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
-  )
+  .then(() => app.listen(PORT, () => console.log(`Server running on port ${PORT}`)))
   .catch((error) => console.log(error));
