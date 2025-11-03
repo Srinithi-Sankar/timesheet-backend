@@ -6,7 +6,19 @@ import authRoutes from "./routes/auth.js"; // ✅ correct path
 
 dotenv.config();
 const app = express();
-app.use(cors());
+
+// ✅ Allow frontend access
+app.use(
+  cors({
+    origin: [
+      "https://timesheet-frontend-qkmc.onrender.com",
+      "http://localhost:3000",
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 
 // ✅ Add your routes here
@@ -21,5 +33,7 @@ app.get("/", (req, res) => {
 const PORT = process.env.PORT || 5000;
 mongoose
   .connect(process.env.MONGO_URI)
-  .then(() => app.listen(PORT, () => console.log(`Server running on port ${PORT}`)))
+  .then(() =>
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
+  )
   .catch((error) => console.log(error));
