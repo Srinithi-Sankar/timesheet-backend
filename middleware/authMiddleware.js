@@ -1,21 +1,7 @@
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
-export default function authMiddleware(req, res, next) {
-  const token = req.header("Authorization")?.split(" ")[1];
-  if (!token) return res.status(401).json({ message: "Access denied" });
-
-  try {
-    const verified = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = verified;
-    next();
-  } catch (err) {
-    res.status(400).json({ message: "Invalid token" });
-  }
-}
-
-
-export const protect = async (req, res, next) => {
+const authMiddleware = async (req, res, next) => {
   let token;
 
   if (
@@ -24,8 +10,11 @@ export const protect = async (req, res, next) => {
   ) {
     try {
       token = req.headers.authorization.split(" ")[1];
+
+      // ✅ Verify JWT
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
+      // ✅ Attach full user info (minus password)
       req.user = await User.findById(decoded.id).select("-password");
 
       if (!req.user) {
@@ -34,11 +23,12 @@ export const protect = async (req, res, next) => {
 
       next();
     } catch (error) {
-      console.error(error);
-      res.status(401).json({ message: "Token failed or invalid" });
+      console.error("Auth Error:", error);
+      res.status(401).json({ message: "Invalid or expired token" });
     }
   } else {
     res.status(401).json({ message: "No token, authorization denied" });
   }
 };
 
+export default authMiddleware;
