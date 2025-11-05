@@ -2,6 +2,7 @@ import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
+
 export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -37,5 +38,19 @@ export const registerUser = async (req, res) => {
     res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+};
+
+
+
+
+// ✅ Get all registered users
+export const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find({}, "username email"); // exclude password
+    res.json(users);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };
